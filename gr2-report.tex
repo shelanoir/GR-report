@@ -131,7 +131,7 @@ with a value of the truth value domain.\\
 \indent + \(a \wedge b = min(a,b)\)\\
 \indent + \(\neg a = \text{symmetrical value of } a\)\\
 \indent + \(a \to b = max(\neg a,b)\)\\
-\(\implies \vee\) and \(\wedge\) are Goedel's norm and conorm.\\
+\(\implies \wedge\) and \(\vee\) are G{\"o}del's T-norm and T-conorm.\\
 Let T(A) be A's truth value under an arbitrary interpretation.\\
 {\bfseries Truth value of formulae:}\\
 \indent + If A is a literal, T(A) is determined by the interpretation\\
@@ -144,8 +144,8 @@ Let T(A) be A's truth value under an arbitrary interpretation.\\
 Let \(T_{I:\{A = a1\}}(A^{a2})\) the value of that interpretation. Then:\\
 \indent + \(T_{I:\{A = a1\}}(A^{a2}) = a1 \wedge a2 \) if a1, a2 \(\ge W\)\\
 \indent + \(T_{I:\{A = a1\}}(A^{a2}) = \neg (a1 \vee a2) \) if a1, a2 \(<\) W\\
-\indent + \(T_{I:\{A = a1\}}(A^{a2}) = a1 \wedge \neg a2 \) if a1 \(\ge\) W, a2 \(<\) W\\
-\indent + \(T_{I:\{A = a1\}}(A^{a2}) = \neg a1 \wedge a2 \) if a1 \(<\) W, a2 \(\ge\) W\\
+\indent + \(T_{I:\{A = a1\}}(A^{a2}) = \neg a1 \vee a2 \) if a1 \(\ge\) W, a2 \(<\) W\\
+\indent + \(T_{I:\{A = a1\}}(A^{a2}) =  a1 \vee \neg a2 \) if a1 \(<\) W, a2 \(\ge\) W\\
 
 \subsubsection{Satisfiable, unsatisfiable, false}
 {\bfseries Definition:} Let S be a formula, I be an arbitrary interpretation:\\
@@ -220,15 +220,15 @@ it deduce every formula that is a logical consequence of the original set of for
 {\bfseries Resolution rule:} Given \(A^a \vee B^{b1}\) and \(C^c \vee B^{b2}\). If \(b1 \vee b2 
 \ge W\) and \(b1 \wedge b2 < W\):
 \begin{align*}
-	&\frac{(A^a \vee B^{b1})_{\alpha 1}, (C^c \vee B^{b2})_{\alpha 2}} {(A^a \vee C^c)_{\alpha 3}}\\
+	&\frac{(A^a \vee B^{b1}, {\alpha 1}), (C^c \vee B^{b2}, {\alpha 2})} {(A^a \vee C^c, {\alpha 3})}\\
 	&\text{Where: }
 	\begin{cases}
-	\alpha 1, \alpha 2, \alpha 3 \text{ are confidence value of formulae.}\\
+	\alpha 1, \alpha 2, \alpha 3 \text{ are the reliability of formulae.}\\
 	A, B, C \text{ are propositional symbols}\\
 	a, b1, b2, c \text{ are linguistic value}
 	\end{cases}
 	\\
-	&\text{If } (A^a \vee B^{b1})_{\alpha 1} \wedge (C^c \vee B^{b2})_{\alpha 2} \text{ is 
+	&\text{If } (A^a \vee B^{b1}, {\alpha 1}) \wedge (C^c \vee B^{b2}, {\alpha 2}) \text{ is 
 	unsatisfiable, the result of resolution is the null clause.} 
 \end{align*}
 \(\implies\) To be able to reasoning using resolution, we first have to transform the original
@@ -250,9 +250,9 @@ that \(KB \cup \neg G\) is unsatisfiable.\\\\
 \indent{\bfseries END}\\
 
 
-\subsection{Confidence value in HA-based logic}
+\subsection{Reliability value in HA-based logic}
 By the definition of resolution, we can see for the two clauses to be able to resolve, \(b_1\) and 
-\(b_2\) must be on different side w.r.t. W, and the bigger their difference, the more confident the 
+\(b_2\) must be on different side w.r.t. W, and the bigger their difference, the more reliable the 
 inference.\\\\
 The reliability \({\alpha}_3\) of the inferred clause is:\\
 \begin{align*}
@@ -260,6 +260,42 @@ The reliability \({\alpha}_3\) of the inferred clause is:\\
 \end{align*}
 \\
 \subsection{Alpha-resolution stragety in HA-based logic}
+\paragraph{} Since different proofs of the same clause may have different reliabilities, 
+it is natural to study how to design a resolution procedure with the best reliability. 
+Below we present such a procedure.
+\paragraph{} 
+We say that a set of clauses S is saturated iff for every fuzzy linguistic reso-
+lution inference with premises in S, the conclusion of this inference is a variant
+with smaller or equal reliability of some clauses in S. That is for every fuzzy
+linguistic resolution inference:\\
+\[\indent \frac{(C1, \alpha1), (C2, \alpha2)}{(C,\alpha)}
+\]
+\indent there is some clause \((C',\alpha') \in \) S such that \(\alpha' \ge \alpha\).
+\paragraph{} 
+We introduce a resolution strategy, called $\alpha$-strategy, which guarantees that
+the resolution proof of each clause has the maximal reliability. An $\alpha$-strategy
+derivation is a sequence of the form S0,\ldots,Si,\ldots, where
+\begin{itemize} 
+	\item each Si is a set of clauses with reliability, and
+	\item  \(S_{i+1}\) is obtained by adding the conclusion of a fuzzy 
+	linguistic resolution inference with premises with maximal reliabilities 
+	from Si , that is \(S_{i+1} = Si \cup \{(C, \alpha)\}\), 
+	where (C, $\alpha$) is the conclusion of the fuzzy linguistic resolution inference  
+	\(\frac{(C1 , \alpha1), (C2 , \alpha2)}	{(C, \alpha)}\)
+	\\\\	
+	$(C1 , \alpha1 ), (C2 , \alpha2 ) \in S_{i}$ and there are not any clauses 
+	with reliability $(C1 , \alpha_{1}' ), (C2 , \alpha_{2}' ) \in S_{i}$ such that
+			$\alpha_{1}' > \alpha_{1}$ and $\alpha_{2}' > \alpha_{2}$ , or
+
+		\item $S_{i+1}$ is obtained by removing a variant with smaller 
+			reliability, that is $S_{i+1} = S_{i} \setminus \{(C, \alpha)\}$ 
+			where $(C, \alpha) \in S_{i}$ and there is some
+			$(C, \alpha') \in S_{i}$ such that $\alpha < \alpha'$.
+\end{itemize}
+\paragraph{} 
+{\bfseries The limit of a derivation S0,\ldots,Si,\ldots:} 
+$S_{\infty} = \underset{i \ge 0}{\cup} \underset{j \ge i}{\cap}S_{j}$
+
 \section{Future plan:}
 \begin{itemize}
 	\item  Define a first-order logic with hedge algebra as its truth value domain
