@@ -274,7 +274,7 @@ linguistic resolution inference:\\
 \paragraph{} 
 We introduce a resolution strategy, called $\alpha$-strategy, which guarantees that
 the resolution proof of each clause has the maximal reliability. An $\alpha$-strategy
-derivation is a sequence of the form S0,\ldots,Si,\ldots, where
+derivation is a sequence of the form $S_{0},\ldots,S_{i},\ldots$, where
 \begin{itemize} 
 	\item each Si is a set of clauses with reliability, and
 	\item  \(S_{i+1}\) is obtained by adding the conclusion of a fuzzy 
@@ -293,8 +293,28 @@ derivation is a sequence of the form S0,\ldots,Si,\ldots, where
 			$(C, \alpha') \in S_{i}$ such that $\alpha < \alpha'$.
 \end{itemize}
 \paragraph{} 
-{\bfseries The limit of a derivation S0,\ldots,Si,\ldots:} 
+{\bfseries The limit of a derivation $S_{0},\ldots,S_{i},\ldots$:} 
 $S_{\infty} = \underset{i \ge 0}{\cup} \underset{j \ge i}{\cap}S_{j}$
+\\
+The following result establishes the soundness and completeness of the reso-
+lution procedure.
+\paragraph{Theorem 2}
+Let $S_{0},\ldots,S_{i},\ldots$ be a fuzzy linguistic resolution $\alpha$-strategy derivation.
+Sn contains the empty clause iff S0 is unsatisfiable (for some n = 0, 1,\ldots).
+\paragraph{Lemma 2} 
+Consider the following resolution inferences:
+\[ \frac{(A^{a} \vee B^{b1}, \alpha), (B^{b2} \vee C^{c}, \beta)} {(A^{a} \vee C^{c}, \gamma)}\]
+\[\frac{(A^{a} \vee B^{b1}, \alpha), (B^{b2} \vee C^{c}, \beta')} {(A^{a} \vee C^{c}, \gamma')}\]
+Then, $\beta' > \beta$ implies $\gamma' \ge \gamma$
+
+\paragraph{Lemma 3} Let $S_{0},\ldots,S_{i},\ldots$ be a fuzzy linguistic 
+resolution $\alpha$-strategy derivation, and $S_{\infty}$ be the the limit of the derivation.
+Then $S_{\infty}$ is saturated.
+
+\paragraph{Theorem 3} Let $S_{0},\ldots,S_{i},\ldots$ be a fuzzy linguistic 
+resolution $\alpha$-strategy derivation, and $S_{\infty}$ be the the limit of the derivation. 
+Then for each clause $(C, \alpha)$ in $S_{\infty}$ , there is not any other resolution proof 
+of the clause $(C, \alpha')$ from $S_{0}$ such that $\alpha' > \alpha$.
 
 \section{Future plan:}
 \begin{itemize}
