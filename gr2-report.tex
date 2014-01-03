@@ -318,13 +318,163 @@ resolution $\alpha$-strategy derivation, and $S_{\infty}$ be the the limit of th
 Then for each clause $(C, \alpha)$ in $S_{\infty}$ , there is not any other resolution proof 
 of the clause $(C, \alpha')$ from $S_{0}$ such that $\alpha' > \alpha$.
 
-\section{Future plan:}
+\section{Refined hedge algebra}
+\subsection{Distributive Lattice}
+\paragraph{Partially ordered set: } A set P with an ordering binary relation that is reflexive, 
+anti-symmetrical and transitive on it is called a partially ordered set, or poset.\\\\
+Let a and b be two elements of the set. If \(a \le b\) or \(b \le a\), then a and b are {\em comparable}
+, else they are incomparable. A set P is a totally ordered set if every two elements of P are comparable
+to each other. A totally ordered set is also called a chain. An ordered set without any pair of 
+comparable elements is called an antichain.\\\\
+\paragraph{Lattice: } a poset (P, \(\le\)) is called a lattice if it satisfies two axioms:
 \begin{itemize}
-	\item  Define a first-order logic with hedge algebra as its truth value domain
-	\item  Automatic inference on the aforementioned first-order logic	
-	\item  Research on refined hedge algebra and how to use it as the domain
-		for truth value
-	\item  Design and implement a prolog-like logic programming system using 
-		that logic
+	\item \(\forall\) pair of elements a,b \(\in L\), \{a,b\} has {\em join}: \(a \vee b\) being the
+		least upper bound (supremum) of \{a,b\}.
+	\item \(\forall\) pair of elements a,b \(\in L\), \{a,b\} has {\em meet}: \(a \wedge b\) being 
+		the greatest lower bound (infimum) of \{a,b\}.
 \end{itemize}
+
+Meet and join are binary operation on L. A lattice is called a bounded lattice if it has a greatest 
+element and a least element, denoted 1 and 0 respectively. A lattice can be transformed into a bounded
+lattice by adding to the set the least element \(0 = \wedge_{a_i \in L} a_i\) and the greatest element
+\(1 = \vee_{a_i \in L} a_i\).
+\paragraph{Properties of lattice: } Let the lattice L have a, b, c as its arbitrary elements:
+\begin{itemize}
+	\item Commutative: \(a \wedge b = b \wedge a, a \vee b = b \vee a\)
+	\item Associative: \(a \vee (b \vee c) = (a \vee b) \vee c \), 
+			\(a \wedge (b \wedge c) = (a \wedge b) \wedge c \)
+	\item Absorbtion: \(a \wedge (a \vee b) = a\), \(a \vee (a \wedge b) = a\)
+	\item Idempotent: \(a \wedge a = a\), \(a \vee a = a\)
+\end{itemize}
+
+We can treat the lattice (L, \(\le\)) as an algebraic structure with two operation meet and join: (L,
+\(\wedge, \vee\)).\\\\
+
+\paragraph{Distributive lattice: } A lattice (L, \(\wedge, \vee\)) is a distributive lattice if \(
+\forall a,b,c \in L\): \\
+\[ a \wedge (b \vee c) = (a \wedge b) \vee (a \wedge c)\\
+a \vee (b \wedge c) = (a \vee b) \wedge (a \vee c)\\\]
+\\
+\paragraph{Modular lattice: } A lattice is a modular lattice if: \(x \le b \implies x \vee (a \wedge b)
+= (x \vee a) \wedge b\).\\\\
+
+\subsection{Refined-HA}
+\paragraph{Semantical consistency: } let \( AX = (X,G,O,\le)\) be an arbitrary algebraic structure. 
+Assume O is partitioned into two seperated subsets \( O^+, O^-\) such that \(O^+ + I, O^- + I\) are 
+finite lattice with I being their zero element. Then X and O are semantically consistent if:
+\begin{itemize}
+	\item X is generated from elements in G under the effect of hedges in O i.e for \(x \in X, 
+		x = h_1..h_na, h_i \in O, i = 1..n, a \in G\)
+	\item \(\forall h,k \in O^c+I (c = + \text{ or } -), h<k in O^c+I \iff \forall x \in X:
+		hx > x \text{ or } kx > x \implies hx < kx, \text{ and } hx < x \text{ or } kx <x
+		\implies kx < hx\). h, k are incomparable in \(O^c+I \iff \forall (x \in X, hx \neq x
+		\text{ or } kx \neq x) \implies\) hx and kx are incomparable.\\
+\end{itemize}
+%
+\paragraph{Cover: } let P be a poset. An element a is called of cover of another element b if
+\(b < a \text{ and } \not \exists x \in P, b < x < a\)\\
+Let l(P) denote the length of a poset P. If P has finite length and has an infimum element 0, 
+the height of an element x in P is denoted by height(x), which is the least upper bound of the length of
+the chain \(0 = x_0<x_1..<x_n = x\) between 0 and x. If P has a supremum 1, it is obvious that height(1)
+= l(P), and height(x) = 1 if x cover 0.\\\\
+
+\paragraph{Graded poset: } a poset P can be graded if there exists a function \(g:P\to Z\) such that:
+\begin{itemize}
+	\item \(x > y \implies g(x) > g(y) \)
+	\item if x cover y then \(g(x) = g(y) + 1\)
+\end{itemize}
+Then g is a rank function of P. A finite modular lattice is graded by its height function.\\
+Let L be a finite modular lattice, we define the relation R on L such that: \(\forall x,y \in L, (x,y)
+\in R \iff height(x) = height(y)\)\\
+R is then an equivalence relation on L. We can partition L into equivalence classes: 
+\(L = \overset{l(L)}{\underset{i=0}{\bigcup}} L_i\)\\
+Each class \(L_i\) corresponding to a height i, which means every element in \(L_i\) has the height of i.\\
+To be able to operate on linguistic hedges, we also set the follow condition:\\
+\indent \((C_0)\) For all \(x \in L_i, y \in L_j, i \neq j\) then \(x>y\) or \(x<y\)
+\paragraph{Theorem: } let L be a finite modular lattice and satisfies \(C_0\). Then: if \(|L_i| > 1\)
+ with \(i \in \{1..l(L)-1\}\) then \(|L_{i-1}| = 1\) and \(|L_{i+1}| = 1\).\\
+Let H be the set of hedges, such that \(H^+ + I\) and \(H^- + I\) are finite modular lattice
+satisfying \(C_0\). Let \(N^+\) and  \(N^-\) be the length of \(H^+ +I\) and \(H^- + I\). \(g^+\) 
+and \(g^-\) are rank functions of \(H^+ +I\) and \(H^-+I\). Let V and S be unit operation of \(H^+ +I\)
+and \(H^-+I\). Then we have \(g^+(V) = N^+, g^-(S) = N^-\) and:\\
+\begin{itemize}
+	\item \(H^+ + I = \overset{N^+}{\underset{i=0}{\bigcup}} {H^+}_i, 
+		\text{ where } {H^+}_i =\{ h \in H^+I| g^+(h) = i\}\)
+	\item \(H^- + I = \overset{N^-}{\underset{i=0}{\bigcup}} {H^-}_i, 
+		\text{ where } {H^-}_i =\{ h \in H^-I| g^-(h) = i\}\)
+\end{itemize}
+Let \({LH^+}_i = (L({H^+}_i), \wedge, \vee)\) be a lattice free-generated from incomparable elements
+\({h^i}_1..{h^i}_n \in {H^+}_i\). With index i such that \(|{H^+}_i| = 1\) we have \({LH^+}_i = 
+{H^+}_i\). Let \(LH^+ = {\bigcup^{N^+}}_{i=1} {LH^+}_i\) and \({LH^+} + I = LH^+ \cup \{I\}
+= {\bigcup^{N^+}}_{i=0} {LH^+}_i\). Then \({LH^+} + I\) is a distributive lattice with the ordering
+relation being the ordering relation on the lattice \({LH^+}_i\), and \({LH^+}_i\) is a graded class
+of \(LH^+\).\\
+Similarly we can construct \(LH^- + I\) from \(H^- + I\). Because \(H^+ \not{\cap} H^-\), \(LH^+ \not{
+\cap} LH^-\). We have the following theorem:\\\\
+\paragraph{Theorem: } \((LH^+ + I, \vee, \wedge,I,V,\le)\) and \((LH^- + I, \vee, \wedge,I,S,\le)\)
+are finite distributive lattice  with unit operation V and S, infimum element I.\\
+\paragraph{Notation: } Before investigate the definition of refined hedge algebra, we now introduce
+somw notation: \\
+\begin{itemize}
+	\item \(LH^*\) is the set of all hedge strings generated from LH
+	\item UOS the unit operation set
+	\item \({LH^c}_i[x] = \{hx|h \in {LH^c}_i\}\)
+	\item LH(x) is the set of all linguistic value \(\alpha x, \alpha \in LH^*\)
+\end{itemize}
+We now have the definition of refined hedge algebra:\\\\
+\paragraph{Refined hedge algebra: } \(AX = (X,G,LH,\le)\) is a refined hedge algebra if X and LH are
+semantically consistent and AX satisfies the following conditions:\\
+\begin{itemize}
+	\item Every operation in \(LH^-\) is converse to every operation in \(LH^+\)
+	\item unit operation of \(H^++I (H^-+I) \) is positive (negative) w.r.t. every element in H
+	\item if u and v are independent (\( u \notin LH(v), v \notin LH(u)\)) then \(x \notin LH(u)\) 
+	for every x in LH(v) and vice versa. If \(x \neq hx, x\notin LH(hx)\). If \(kx \neq hx\) then kx
+	and hx are independent.
+	\item Semantic heredity - comparability preservation: if hx and kx are incomparable, then \(
+	\forall u \in LH(hx), v \in LH(kx)\), u and v are incomparable. If \(a,b \in G\) and \(a<b\)
+	then \(LH(a) < LH(b)\). If \(hx < kx\):\\
+	\begin{itemize}
+		\item if \(h,k \in {LH^c}_i, i \in SI^c\):
+			\begin{itemize}
+				\item \(\delta hx < \delta kx, \forall \delta in LH^*\)
+				\item \(\delta hx\) and y are incomparable with all \(y \in LH(kx)\)
+					such that \(y \not> \delta kx\)
+				\item \(delta kx\) and z are incomparable, for all \(z \in LH(hx)\)
+					such that \(z \not< delta hx\)
+			\end{itemize}
+		\item if \(\{h,k\} \not\subset {LH^c}_i \forall i \in SI^c\) or hx = kx, then 
+			\(h'hx \le k'kx\) for all h',k' in UOS.
+	\end{itemize}
+	\item (Linear ordering between graded-term sets): Assume that \(u \in LH(x), u\notin 
+		LH({LH^c}_i[hx]) \forall i \in I^c\) If there exists \(v \in LH(hx)\) with 
+		\(h \in {LH^c}_i\) such that \(u \ge v\) or \(u \le v\), then \(u \ge h'v\) 
+		(or \(u \le h'v\) for \(h' \in UOS\)	
+\end{itemize}
+As we can see, refined hedge algebra is a generalization of hedge algebra. We now have the following 
+theorem:\\
+\paragraph{Theorem: } let \(AX = (X,G,LH,\le)\) be a refined hedge algebra. if G is a chain then AX is
+a distributive lattice.\\
+With AX being a distributive lattice, we can define intersection and union operations as AX's meet and 
+join, and preserve every properties of hedge algebra's intersection and union operations. We then define
+negation on RHA:\\
+\paragraph{Negation: } let \(AX = (X,G,LH,\le\) be a refined hedge algebra with \(G = \{
+0,f,W,t,1\}\). Let \(x = h_1..h_n a\) with \(a \in \{t,f\}\), then y is the negation of x, denoted 
+y = -x if \(y = h_1..h_n a', a' \in \{t,f\}, a \neq a'\).\\
+\paragraph{Refined linear symmetrical hedge algebra: } let \(AX = (X,G,LH,\le)\) be a refined hedge
+algebra, with \(G = \{0,f,W,t,1\}\). AX is called symmetrical if every element of X has one and only one
+ negation.\\
+Noted that with every important properties that makes the propositional logic using linear symmetrical
+hedge algebra in previous sections able to reason using resolution rule, it is certainly possible to 
+use refined hedge algebra as a basis for a similar logic that also capable of reasoning using resolution
+.\\\\
+
+%\section{Future plan:}
+%\begin{itemize}
+%	\item  Define a first-order logic with hedge algebra as its truth value domain
+%	\item  Automatic inference on the aforementioned first-order logic	
+%	\item  Research on refined hedge algebra and how to use it as the domain
+%		for truth value
+%	\item  Design and implement a prolog-like logic programming system using 
+%		that logic
+%\end{itemize}
 \end {document}
